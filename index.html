@@ -11,6 +11,7 @@
             --surface: #161b22; --text-dim: rgba(255, 255, 255, 0.15);
         }
 
+        /* نظام الثيمات المتطور */
         body.theme-blue { --primary: #00d2ff; }
         body.theme-gold { --primary: #f1c40f; }
         body.theme-purple { --primary: #a55eea; }
@@ -25,79 +26,86 @@
 
         #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.25; }
 
-        .ad-banner-top {
-            width: 100%; max-width: 728px; min-height: 90px; margin: 20px auto;
+        .ad-banner {
+            width: 100%; max-width: 900px; height: 90px; margin: 20px 0;
+            border: 1px dashed var(--primary); border-radius: 15px;
             display: flex; align-items: center; justify-content: center;
-        }
-
-        .ad-banner-bottom {
-            width: 100%; max-width: 300px; min-height: 250px; margin: 30px auto;
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.02); color: var(--text-dim); font-size: 12px;
         }
 
         .main-container {
-            width: 95%; max-width: 1000px; padding: 30px; border-radius: 40px;
+            width: 95%; max-width: 1000px; padding: 50px; border-radius: 40px;
             background: var(--surface); position: relative;
             box-shadow: 0 30px 80px rgba(0,0,0,0.6); margin-top: 10px;
             border: 1px solid rgba(255,255,255,0.03);
         }
 
+        /* محرك الكتابة الملونة */
         .typing-engine {
-            position: relative; min-height: 120px; margin-bottom: 30px;
+            position: relative; min-height: 150px; margin-bottom: 40px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; line-height: 1.6; text-align: center;
+            font-size: 2.5rem; line-height: 1.6; text-align: center;
         }
 
-        #text-display { width: 100%; position: relative; z-index: 2; white-space: pre-wrap; color: var(--text-dim); }
+        #text-display {
+            width: 100%; position: relative; z-index: 2;
+            white-space: pre-wrap; word-wrap: break-word;
+            color: var(--text-dim); /* اللون الباهت الأساسي */
+        }
+
+        /* تنسيق الأحرف الملونة */
         .char-correct { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
         .char-wrong { color: var(--error); background: rgba(255, 71, 87, 0.2); }
-        #hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; width: 100%; }
-        .stat-box { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .stat-val { display: block; font-size: 1.8rem; font-weight: 900; color: var(--primary); font-family: 'Orbitron'; }
-        .stat-lab { font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px; }
+        #hidden-input {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; z-index: 10; cursor: pointer;
+        }
 
-        .xp-area { margin-top: 25px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 20px; }
-        .xp-top { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; font-size: 0.8rem; }
+        /* الإحصائيات */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .stat-box {
+            background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.3s;
+        }
+        .stat-box:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .stat-val { display: block; font-size: 2.2rem; font-weight: 900; color: var(--primary); font-family: 'Orbitron'; }
+        .stat-lab { font-size: 0.7rem; opacity: 0.4; letter-spacing: 1px; }
+
+        /* التقدم والرتبة */
+        .xp-area { margin-top: 35px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; }
+        .xp-top { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; font-size: 0.9rem; }
         .xp-track { width: 100%; height: 8px; background: #000; border-radius: 50px; overflow: hidden; }
         #xp-bar { width: 0%; height: 100%; background: var(--primary); transition: 0.6s ease-out; }
 
-        .controls { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+        .controls { display: flex; gap: 15px; margin-top: 30px; justify-content: center; }
         .btn {
             background: transparent; border: 1px solid var(--primary); color: white;
-            padding: 8px 20px; border-radius: 12px; cursor: pointer; font-family: 'Cairo';
-            font-size: 0.8rem; transition: 0.3s;
+            padding: 10px 25px; border-radius: 12px; cursor: pointer; font-family: 'Cairo';
+            font-size: 0.9rem; transition: 0.3s;
         }
         .btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
 
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
         .apply-shake { animation: shake 0.15s infinite; }
-        
-        @media (max-width: 600px) {
-            .typing-engine { font-size: 1.4rem; }
-            .ad-banner-top { display: none; } /* إخفاء إعلان اللابتوب على الموبايل */
-        }
     </style>
 </head>
-<body>
+<body class="">
 
-    <div class="ad-banner-top">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'cdbb165bb2d7073ba2573bea978a2d8d',
-                'format' : 'iframe',
-                'height' : 90,
-                'width' : 728,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/cdbb165bb2d7073ba2573bea978a2d8d/invoke.js"></script>
-    </div>
+    <div class="ad-banner"><script>
+  atOptions = {
+    'key' : 'cdbb165bb2d7073ba2573bea978a2d8d',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/cdbb165bb2d7073ba2573bea978a2d8d/invoke.js"></script></div>
 
     <canvas id="bg-canvas"></canvas>
 
-    <h1 style="font-family: 'Orbitron'; font-size: 2rem; margin: 10px 0; color: var(--primary); text-shadow: 0 0 15px var(--primary);">SULTAN TYPER</h1>
+    <h1 style="font-family: 'Orbitron'; font-size: 2.5rem; margin: 20px 0; color: var(--primary); text-shadow: 0 0 15px var(--primary);">SULTAN TYPER</h1>
 
     <div class="main-container" id="game-box">
         <div class="typing-engine">
@@ -107,9 +115,9 @@
 
         <div class="stats-grid">
             <div class="stat-box"><span class="stat-val" id="wpm">0</span><span class="stat-lab">WPM</span></div>
-            <div class="stat-box"><span class="stat-val" id="acc">100</span><span class="stat-lab">ACC %</span></div>
+            <div class="stat-box"><span class="stat-val" id="acc">100</span><span class="stat-lab">ACCURACY %</span></div>
             <div class="stat-box"><span class="stat-val" id="lvl">1</span><span class="stat-lab">LEVEL</span></div>
-            <div class="stat-box"><span class="stat-val" id="best">0</span><span class="stat-lab">BEST</span></div>
+            <div class="stat-box"><span class="stat-val" id="best">0</span><span class="stat-lab">BEST RECORD</span></div>
         </div>
 
         <div class="xp-area">
@@ -121,25 +129,15 @@
         </div>
 
         <div class="controls">
-            <button class="btn" onclick="switchTheme()">ثيم 🎨</button>
-            <button class="btn" onclick="startNewLevel()">جديد 🔄</button>
+            <button class="btn" onclick="switchTheme()">تبديل الثيم 🎨</button>
+            <button class="btn" onclick="startNewLevel()">جملة جديدة 🔄</button>
         </div>
     </div>
 
-    <div class="ad-banner-bottom">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'd36063c799c71ec48bf58ef50fc2b919',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/d36063c799c71ec48bf58ef50fc2b919/invoke.js"></script>
-    </div>
+    <div class="ad-banner" style="height: 200px; margin-top: 30px;">مساحة إعلانية جانبية - AD SPACE 300x250</div>
 
 <script>
+    // قاعدة بيانات الجمل العشوائية المتنوعة
     const sentences = [
         "الناجحون لا ينتظرون الفرص بل يصنعونها بأنفسهم دائماً.",
         "الاستمرار في المحاولة هو السر الحقيقي للوصول إلى القمة.",
@@ -162,7 +160,7 @@
 
     function startNewLevel() {
         targetSentence = sentences[Math.floor(Math.random() * sentences.length)];
-        renderText("");
+        renderText(""); // عرض النص باهت في البداية
         inputField.value = "";
         document.getElementById('best').innerText = bestRecord;
         clearInterval(timer);
@@ -171,13 +169,16 @@
         inputField.focus();
     }
 
+    // الدالة السحرية لتلوين الأحرف حرفاً بحرف
     function renderText(currentInput) {
         let htmlContent = "";
         for (let i = 0; i < targetSentence.length; i++) {
             if (i < currentInput.length) {
-                htmlContent += (currentInput[i] === targetSentence[i]) 
-                    ? `<span class="char-correct">${targetSentence[i]}</span>` 
-                    : `<span class="char-wrong">${targetSentence[i]}</span>`;
+                if (currentInput[i] === targetSentence[i]) {
+                    htmlContent += `<span class="char-correct">${targetSentence[i]}</span>`;
+                } else {
+                    htmlContent += `<span class="char-wrong">${targetSentence[i]}</span>`;
+                }
             } else {
                 htmlContent += `<span>${targetSentence[i]}</span>`;
             }
@@ -190,12 +191,19 @@
             startTime = new Date();
             timer = setInterval(updateLiveStats, 100);
         }
-        renderText(inputField.value);
-        if (inputField.value.length > 0 && inputField.value[inputField.value.length - 1] !== targetSentence[inputField.value.length - 1]) {
+
+        const val = inputField.value;
+        renderText(val);
+
+        // اهتزاز الشاشة عند الخطأ
+        if (val.length > 0 && val[val.length - 1] !== targetSentence[val.length - 1]) {
             gameBox.classList.add('apply-shake');
             setTimeout(() => gameBox.classList.remove('apply-shake'), 150);
         }
-        if (inputField.value === targetSentence) finishLevel();
+
+        if (val === targetSentence) {
+            finishLevel();
+        }
     });
 
     function updateLiveStats() {
@@ -211,21 +219,26 @@
         if (finalWpm > bestRecord) {
             bestRecord = finalWpm;
             localStorage.setItem('sultan_pro_best', bestRecord);
+            document.getElementById('best').innerText = bestRecord;
         }
+
         xpPoints += 45;
-        if (xpPoints >= 100) { currentLevel++; xpPoints = 0; }
-        document.getElementById('lvl').innerText = currentLevel;
+        if (xpPoints >= 100) {
+            currentLevel++; xpPoints = 0;
+            document.getElementById('lvl').innerText = currentLevel;
+        }
         document.getElementById('xp-bar').style.width = xpPoints + "%";
         document.getElementById('xp-status').innerText = xpPoints + " / 100 XP";
+        
         updateRankDisplay(finalWpm);
         setTimeout(startNewLevel, 1200);
     }
 
     function updateRankDisplay(wpm) {
         let rank = "NOOB 🐢";
-        if (wpm > 30) rank = "FAST 🐇";
-        if (wpm > 60) rank = "TIGER 🐅";
-        if (wpm > 90) rank = "BOSS 👑";
+        if (wpm > 30) rank = "FAST BUNNY 🐇";
+        if (wpm > 60) rank = "NEON TIGER 🐅";
+        if (wpm > 90) rank = "SULTAN BOSS 👑";
         document.getElementById('rank-tag').innerText = "RANK: " + rank;
     }
 
@@ -234,10 +247,11 @@
         document.body.className = themes[themeIdx];
     }
 
+    // Particles Background
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    let dots = Array.from({length: 50}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, dx: Math.random()-0.5, dy: Math.random()-0.5}));
+    let dots = Array.from({length: 70}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, dx: Math.random()-0.5, dy: Math.random()-0.5}));
     function animate() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary');
@@ -245,10 +259,11 @@
             d.x += d.dx; d.y += d.dy;
             if(d.x<0 || d.x>canvas.width) d.dx*=-1;
             if(d.y<0 || d.y>canvas.height) d.dy*=-1;
-            ctx.beginPath(); ctx.arc(d.x, d.y, 1.2, 0, 7); ctx.fill();
+            ctx.beginPath(); ctx.arc(d.x, d.y, 1.5, 0, 7); ctx.fill();
         });
         requestAnimationFrame(animate);
     }
+
     animate(); startNewLevel();
     document.addEventListener('click', () => inputField.focus());
 </script>
