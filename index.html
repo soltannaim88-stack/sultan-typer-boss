@@ -1,640 +1,262 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-<title>تحويل العملات - Dolar SOS</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  /* ************************************************* */
-  /* إعادة تعيين المربع (Reset Box Sizing) لضمان عدم الخروج عن الحدود */
-  /* ************************************************* */
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SULTAN TYPER BOSS | PROFESSIONAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88; --error: #ff4757; --bg: #0a0e14;
+            --surface: #161b22; --text-dim: rgba(255, 255, 255, 0.15);
+        }
 
-  /* ************************************************* */
-  /* تنسيقات عامة للـ BODY */
-  /* ************************************************* */
-  body { 
-    font-family: 'Arial', sans-serif; 
-    text-align: center; 
-    margin: 0; 
-    padding: 20px;
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    background-attachment: fixed; 
-    color: white; 
-    min-height: 100vh; 
-    display: flex; 
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative; 
-    transition: background-image 0.5s ease-in-out; 
-  }
+        /* نظام الثيمات المتطور */
+        body.theme-blue { --primary: #00d2ff; }
+        body.theme-gold { --primary: #f1c40f; }
+        body.theme-purple { --primary: #a55eea; }
+        body.theme-orange { --primary: #ff9f43; }
 
-  /* ************************************************* */
-  /* تنسيقات لإخفاء أسهم حقل الرقم في المتصفحات (مهم للموبايل) */
-  /* ************************************************* */
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
-  }
-  input[type=number] {
-    -moz-appearance: textfield; /* Firefox */
-  }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body {
+            background-color: var(--bg); color: white; font-family: 'Cairo', sans-serif;
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden; transition: background 0.5s;
+        }
 
-  /* ************************************************* */
-  /* تنسيقات شاشة الترحيب (Splash Screen) */
-  /* ************************************************* */
-  #splashScreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; 
-    align-items: center;
-    padding-bottom: 50px; 
-    background: none; 
-  }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.25; }
 
-  #startButton {
-    background-color: #00A86B; 
-    color: white;
-    padding: 15px 40px;
-    border-radius: 10px;
-    border: none;
-    font-size: 1.5em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 4px #007A4E;
-    margin-bottom: 20px;
-  }
-  #startButton:hover {
-    background-color: #007A4E;
-  }
+        .ad-banner {
+            width: 100%; max-width: 900px; height: 90px; margin: 20px 0;
+            border: 1px dashed var(--primary); border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.02); color: var(--text-dim); font-size: 12px;
+        }
 
-  .hidden {
-    display: none !important;
-  }
+        .main-container {
+            width: 95%; max-width: 1000px; padding: 50px; border-radius: 40px;
+            background: var(--surface); position: relative;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6); margin-top: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
 
-  /* ************************************************* */
-  /* تنسيقات التطبيق الرئيسي (بقية التنسيقات) */
-  /* ************************************************* */
-  .container {
-    background-color: rgba(0, 0, 0, 0.85); 
-    padding: 30px 20px; /* تقليل عرض البادينغ الداخلي ليناسب الموبايل */
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7); 
-    max-width: 90%; 
-    width: 400px; 
-    margin: 20px auto; 
-    position: relative; 
-  }
-  select, input { 
-    padding: 12px; 
-    margin: 10px 0; 
-    width: 90%; /* زيادة عرض الحقول قليلاً */
-    max-width: 350px; 
-    border-radius: 8px; 
-    border: 1px solid rgba(255, 255, 255, 0.4); 
-    background-color: rgba(255, 255, 255, 0.15); 
-    color: white; 
-    font-size: 1em;
-    -webkit-appearance: none; 
-    -moz-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    box-sizing: border-box; 
-  }
-  input:focus, select:focus {
-      outline: 2px solid #00A86B; 
-  }
-  input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  select option {
-    background-color: rgba(0, 0, 0, 0.9); 
-    color: white;
-  }
-  h2 { 
-    color: #00FF99; 
-    font-weight: bold;
-    margin-bottom: 25px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px;
-  }
-  
-  /* ************************************************* */
-  /* تنسيقات زر التحويل (Convert Button) */
-  /* ************************************************* */
-  button.app-button {
-    background-color: #00A86B; 
-    color: white; 
-    padding: 12px 25px;
-    margin: 20px 0;
-    width: 90%; /* زيادة عرض الزر */
-    max-width: 350px; 
-    border-radius: 8px; 
-    border: none;
-    font-weight: bold;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 4px #007A4E; 
-  }
-  button.app-button:hover {
-    background-color: #007A4E; 
-  }
-  button.app-button:active {
-    box-shadow: 0 1px #007A4E;
-    transform: translateY(3px); 
-  }
-  
-  /* ************************************************* */
-  /* تنسيق زر التبديل (Swap Button) */
-  /* ************************************************* */
-  #swapButton {
-    background: none; 
-    border: none; 
-    color: #00FF99; 
-    font-size: 2.5em; 
-    cursor: pointer;
-    margin: 10px auto; 
-    display: block; 
-    width: 50px; 
-    height: 50px; 
-    line-height: 50px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    text-align: center;
-    padding: 0;
-  }
-  #swapButton:active {
-    transform: rotate(180deg);
-  }
-  #swapButton:hover {
-    opacity: 0.8;
-  }
-  
-  .result { 
-    margin-top: 25px; 
-    font-size: 1.6em; 
-    color: #FFD700; 
-    font-weight: bold; 
-    background-color: rgba(0, 0, 0, 0.6); 
-    padding: 15px;
-    border-radius: 10px;
-    line-height: 1.6;
-    border: 1px solid #00A86B;
-  }
-  span {
-      font-weight: bold;
-      margin: 10px 0;
-      display: block; 
-      color: #D3D3D3; 
-  }
-  
-  /* تنسيق الإعلان (تم تحسينه ليكون أكثر واقعية) */
-  .ad-placeholder {
-    margin-top: 25px;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px dashed #FFD700; 
-    color: #FFD700;
-    font-size: 0.9em;
-    border-radius: 8px;
-    width: 90%; 
-    max-width: 400px;
-    text-align: center;
-    position: relative; 
-  }
-  .ad-title {
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #00FF99;
-      margin-bottom: 5px;
-  }
-  .ad-text {
-      color: #D3D3D3;
-      margin-bottom: 10px;
-  }
-  .ad-button {
-      background-color: #3498db;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      cursor: pointer;
-      transition: background-color 0.3s;
-  }
-  .ad-button:hover {
-      background-color: #2980b9;
-  }
-  
-  /* ************************************************* */
-  /* تنسيق عرض التاريخ وزر التبديل */
-  /* ************************************************* */
-  .date-display {
-    position: absolute;
-    top: 20px; 
-    right: 20px; 
-    color: white; 
-    font-size: 0.95em;
-    font-weight: bold;
-    text-align: right;
-    line-height: 1.4;
-    background-color: rgba(0, 0, 0, 0.4); 
-    padding: 5px 10px;
-    border-radius: 5px;
-    z-index: 100;
-    display: flex; 
-    flex-direction: column; 
-    align-items: flex-end; 
-    min-width: 150px; 
-  }
+        /* محرك الكتابة الملونة */
+        .typing-engine {
+            position: relative; min-height: 150px; margin-bottom: 40px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; line-height: 1.6; text-align: center;
+        }
 
-  #dateToggle {
-    background-color: rgba(0, 0, 0, 0.5); 
-    color: #FFD700; 
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #FFD700;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 0.85em;
-    margin-top: 8px;
-    transition: background-color 0.3s;
-  }
-  #dateToggle:hover {
-    background-color: #FFD700;
-    color: #000;
-  }
-  
-  /* تنسيقات زر القائمة */
-  .menu-button {
-    position: absolute;
-    top: 20px;
-    left: 10px; 
-    background: none !important; 
-    border: none !important; 
-    color: white; 
-    font-size: 30px; 
-    cursor: pointer;
-    z-index: 100;
-    line-height: 0.5; 
-    font-weight: 900;
-    opacity: 0.9;
-    padding: 5px;
-  }
-  .menu-button:hover {
-      opacity: 1;
-  }
-  .dropdown-menu {
-    position: absolute;
-    top: 55px; 
-    left: 5px; 
-    background-color: rgba(30, 30, 30, 0.95);
-    border: 1px solid #00A86B;
-    border-radius: 8px;
-    padding: 10px 0;
-    z-index: 99;
-    list-style: none;
-    min-width: 120px; 
-    text-align: right; 
-    display: none; 
-  }
-  .dropdown-menu.show {
-    display: block; 
-  }
-  .dropdown-menu li {
-    padding: 8px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 0.9em;
-  }
-  .dropdown-menu li:hover {
-    background-color: #00A86B;
-  }
+        #text-display {
+            width: 100%; position: relative; z-index: 2;
+            white-space: pre-wrap; word-wrap: break-word;
+            color: var(--text-dim); /* اللون الباهت الأساسي */
+        }
 
-  /* تنسيق مؤشر التحميل */
-  .loading-message {
-      margin-top: 20px;
-      font-size: 1.2em;
-      color: #00FF99;
-      display: none;
-  }
-</style>
+        /* تنسيق الأحرف الملونة */
+        .char-correct { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        .char-wrong { color: var(--error); background: rgba(255, 71, 87, 0.2); }
+
+        #hidden-input {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; z-index: 10; cursor: pointer;
+        }
+
+        /* الإحصائيات */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .stat-box {
+            background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.3s;
+        }
+        .stat-box:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .stat-val { display: block; font-size: 2.2rem; font-weight: 900; color: var(--primary); font-family: 'Orbitron'; }
+        .stat-lab { font-size: 0.7rem; opacity: 0.4; letter-spacing: 1px; }
+
+        /* التقدم والرتبة */
+        .xp-area { margin-top: 35px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; }
+        .xp-top { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; font-size: 0.9rem; }
+        .xp-track { width: 100%; height: 8px; background: #000; border-radius: 50px; overflow: hidden; }
+        #xp-bar { width: 0%; height: 100%; background: var(--primary); transition: 0.6s ease-out; }
+
+        .controls { display: flex; gap: 15px; margin-top: 30px; justify-content: center; }
+        .btn {
+            background: transparent; border: 1px solid var(--primary); color: white;
+            padding: 10px 25px; border-radius: 12px; cursor: pointer; font-family: 'Cairo';
+            font-size: 0.9rem; transition: 0.3s;
+        }
+        .btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+        .apply-shake { animation: shake 0.15s infinite; }
+    </style>
 </head>
-<body dir="rtl">
+<body class="">
 
-  <div id="splashScreen">
-    <button id="startButton" onclick="startApp()">START</button>
-  </div>
+    <div class="ad-banner">مساحة إعلانية علوية - AD SPACE 728x90</div>
 
-  <div id="mainApp" class="hidden">
-    
-    <div id="dateDisplay" class="date-display">
-      </div>
+    <canvas id="bg-canvas"></canvas>
 
-    <button class="menu-button" id="menuButton" onclick="toggleMenu()">
-        ⋮
-    </button>
-    
-    <ul class="dropdown-menu" id="languageMenu">
-        <li onclick="changeLanguage('ar'); toggleMenu();" data-lang-key="lang_arabic">العربية</li>
-        <li onclick="changeLanguage('en'); toggleMenu();" data-lang-key="lang_english">English</li>
-    </ul>
+    <h1 style="font-family: 'Orbitron'; font-size: 2.5rem; margin: 20px 0; color: var(--primary); text-shadow: 0 0 15px var(--primary);">SULTAN TYPER</h1>
 
-    <div class="container">
-      <h2 id="mainTitle">محول العملات الفوري (أسعار حية)</h2>
+    <div class="main-container" id="game-box">
+        <div class="typing-engine">
+            <div id="text-display">جاري تجهيز التحدي...</div>
+            <input type="text" id="hidden-input" autofocus autocomplete="off" spellcheck="false">
+        </div>
 
-      <input type="number" id="amount" placeholder="أدخل المبلغ" min="0.01" value="1" data-lang-key="placeholder_amount" oninput="convertCurrency()" inputmode="numeric">
+        <div class="stats-grid">
+            <div class="stat-box"><span class="stat-val" id="wpm">0</span><span class="stat-lab">WPM</span></div>
+            <div class="stat-box"><span class="stat-val" id="acc">100</span><span class="stat-lab">ACCURACY %</span></div>
+            <div class="stat-box"><span class="stat-val" id="lvl">1</span><span class="stat-lab">LEVEL</span></div>
+            <div class="stat-box"><span class="stat-val" id="best">0</span><span class="stat-lab">BEST RECORD</span></div>
+        </div>
 
-      <select id="fromCurrency" onchange="convertCurrency()"></select>
-      
-      <button onclick="swapCurrencies()" id="swapButton" title="تبديل العملات">
-          &#x21C6;
-      </button>
+        <div class="xp-area">
+            <div class="xp-top">
+                <span id="rank-tag" style="color: var(--primary);">RANK: NOOB 🐢</span>
+                <span id="xp-status">0 / 100 XP</span>
+            </div>
+            <div class="xp-track"><div id="xp-bar"></div></div>
+        </div>
 
-      <span id="toText" data-lang-key="to_text">إلى</span>
-
-      <select id="toCurrency" onchange="convertCurrency()"></select>
-
-      <div class="loading-message" id="loadingMessage">جاري جلب الأسعار...</div>
-
-      <button onclick="convertCurrency()" id="convertButton" data-lang-key="button_convert" class="app-button">تحويل</button>
-
-      <div class="result" id="result"></div>
+        <div class="controls">
+            <button class="btn" onclick="switchTheme()">تبديل الثيم 🎨</button>
+            <button class="btn" onclick="startNewLevel()">جملة جديدة 🔄</button>
+        </div>
     </div>
 
-    <div class="ad-placeholder">
-        <div class="ad-title">مساحة إعلانية (Google AdSense/AdMob)</div>
-        <div class="ad-text">لربط الإعلان هنا، يجب استبدال هذا الكود بكود الإعلان الخاص بك من Google.</div>
-        <a href="https://support.google.com/adsense/" class="ad-button" target="_blank">تعرف على AdSense</a>
-    </div>
-  </div>
-
+    <div class="ad-banner" style="height: 200px; margin-top: 30px;">مساحة إعلانية جانبية - AD SPACE 300x250</div>
 
 <script>
-  // ***************************************************
-  // الروابط المطلوبة للخلفيات:
-  // ***************************************************
-  const ORIGINAL_BACKGROUND = "url('https://image.pollinations.ai/prompt/floating,bitcoin,dollar,currencies,crypto,digital,money,dark,background?width=1024&height=1024&seed=2')";
-  const SPLASH_BACKGROUND = "url('https://image.pollinations.ai/prompt/abstract,cyber,currency,background,neon,glow?width=1024&height=1024&seed=22')";
+    // قاعدة بيانات الجمل العشوائية المتنوعة
+    const sentences = [
+        "الناجحون لا ينتظرون الفرص بل يصنعونها بأنفسهم دائماً.",
+        "الاستمرار في المحاولة هو السر الحقيقي للوصول إلى القمة.",
+        "البرمجة هي الفن الوحيد الذي يجمع بين المنطق والخيال.",
+        "العقل القوي يبحث عن الحلول والعقل الضعيف يبحث عن الأعذار.",
+        "سلطان مبرمج سوري متميز يمتلك طموحاً يعانق السماء.",
+        "كن فخوراً بكل خطوة تخطوها نحو تحقيق أحلامك الكبيرة.",
+        "التعلم المستمر هو السلاح الأقوى في مواجهة تحديات العصر.",
+        "المستقبل ينتمي لأولئك الذين يؤمنون بجمال أحلامهم اليوم."
+    ];
 
-  // ***************************************************
-  // بيانات API والمخزن المؤقت (CACHE)
-  // ***************************************************
-  const API_KEY = '68667c547b32d00728aef432'; // مفتاح API الخاص بك (هذا مفتاح تجريبي)
-  const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
-  const CACHE_DURATION_MS = 6 * 60 * 60 * 1000; // مدة التخزين المؤقت: 6 ساعات
+    let targetSentence = "", startTime = null, timer = null, xpPoints = 0, currentLevel = 1;
+    let bestRecord = localStorage.getItem('sultan_pro_best') || 0;
+    const themes = ['', 'theme-blue', 'theme-gold', 'theme-purple', 'theme-orange'];
+    let themeIdx = 0;
 
-  let liveExchangeRates = {}; // لتخزين الأسعار التي تم جلبها
-  let lastFetchTimestamp = 0; // لتخزين آخر وقت تم فيه الجلب
+    const inputField = document.getElementById('hidden-input');
+    const displayArea = document.getElementById('text-display');
+    const gameBox = document.getElementById('game-box');
 
-  // ***************************************************
-  // العملات المدعومة
-  // ***************************************************
-  const supportedCurrencies = {
-      'USD': 'دولار أمريكي (USD)', 'EUR': 'يورو (EUR)', 'GBP': 'جنيه استرليني (GBP)', 
-      'JPY': 'ين ياباني (JPY)', 'CAD': 'دولار كندي (CAD)', 'RUB': 'روبل روسي (RUB)', 
-      'ILS': 'شيكل إسرائيلي (ILS)', 'ARS': 'بيزو أرجنتيني (ARS)', 'BRL': 'ريال برازيلي (BRL)', 
-      'SAR': 'ريال سعودي (SAR)', 'AED': 'درهم إماراتي (AED)', 'JOD': 'دينار أردني (JOD)', 
-      'KWD': 'دينار كويتي (KWD)', 'BHD': 'دينار بحريني (BHD)', 'QAR': 'ريال قطري (QAR)', 
-      'OMR': 'ريال عماني (OMR)', 'EGP': 'جنيه مصري (EGP)', 'LBP': 'ليرة لبنانية (LBP)', 
-      'SYP': 'ليرة سورية (SYP)',
-  };
-
-  // ***************************************************
-  // دالة تشغيل التطبيق
-  // ***************************************************
-  function startApp() {
-    document.body.style.backgroundImage = ORIGINAL_BACKGROUND;
-    document.getElementById('splashScreen').classList.add('hidden');
-    document.getElementById('mainApp').classList.remove('hidden');
-    populateCurrencies(); 
-  }
-
-  // ***************************************************
-  // 1. دوال عرض وتقليب التاريخ
-  // ***************************************************
-  let currentCalendarMode = 'gregorian'; 
-
-  function displayCurrentDates() {
-    const dateDisplay = document.getElementById('dateDisplay');
-    const today = new Date();
-
-    const gregorianDate = new Intl.DateTimeFormat('ar-EG', { 
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-    }).format(today);
-
-    const hijriDate = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-    }).format(today);
-    
-    let dateToShow;
-    let buttonText;
-    
-    if (currentCalendarMode === 'gregorian') {
-        dateToShow = gregorianDate + ' م';
-        buttonText = 'عرض الهجري';
-    } else {
-        dateToShow = hijriDate + ' هـ';
-        buttonText = 'عرض الميلادي';
+    function startNewLevel() {
+        targetSentence = sentences[Math.floor(Math.random() * sentences.length)];
+        renderText(""); // عرض النص باهت في البداية
+        inputField.value = "";
+        document.getElementById('best').innerText = bestRecord;
+        clearInterval(timer);
+        startTime = null;
+        document.getElementById('wpm').innerText = "0";
+        inputField.focus();
     }
 
-    dateDisplay.innerHTML = `
-      <div style="font-size: 1.1em; color: #00FF99;">${dateToShow}</div>
-      <button id="dateToggle" onclick="toggleCalendar()">${buttonText}</button>
-    `;
-  }
-  
-  function toggleCalendar() {
-      currentCalendarMode = (currentCalendarMode === 'gregorian') ? 'hijri' : 'gregorian';
-      displayCurrentDates(); 
-  }
-  
-  // ***************************************************
-  // 2. قاموس الترجمة
-  // ***************************************************
-  const translations = {
-      'ar': {
-          'mainTitle': 'محول العملات الفوري (أسعار حية)',
-          'placeholder_amount': 'أدخل المبلغ',
-          'to_text': 'إلى',
-          'button_convert': 'تحويل',
-          'error_amount': 'الرجاء إدخال مبلغ صحيح وموجب.',
-          'error_rate': 'عذراً، سعر صرف إحدى العملات غير متوفر.',
-          'lang_arabic': 'العربية',
-          'lang_english': 'English',
-          'equals_text': 'يساوي'
-      },
-      'en': {
-          'mainTitle': 'Instant Currency Converter (Live Rates)',
-          'placeholder_amount': 'Enter Amount',
-          'to_text': 'To',
-          'button_convert': 'Convert',
-          'error_amount': 'Please enter a valid, positive amount.',
-          'error_rate': 'Sorry, the exchange rate for one of the currencies is unavailable.',
-          'lang_arabic': 'العربية',
-          'lang_english': 'English',
-          'equals_text': 'Equals'
-      }
-  };
+    // الدالة السحرية لتلوين الأحرف حرفاً بحرف
+    function renderText(currentInput) {
+        let htmlContent = "";
+        for (let i = 0; i < targetSentence.length; i++) {
+            if (i < currentInput.length) {
+                if (currentInput[i] === targetSentence[i]) {
+                    htmlContent += `<span class="char-correct">${targetSentence[i]}</span>`;
+                } else {
+                    htmlContent += `<span class="char-wrong">${targetSentence[i]}</span>`;
+                }
+            } else {
+                htmlContent += `<span>${targetSentence[i]}</span>`;
+            }
+        }
+        displayArea.innerHTML = htmlContent;
+    }
 
-  // ***************************************************
-  // 3. دالة تبديل اللغة وتحديث الواجهة
-  // ***************************************************
-  function changeLanguage(lang) {
-      const currentTranslation = translations[lang];
-      if (!currentTranslation) return;
+    inputField.addEventListener('input', () => {
+        if (!startTime) {
+            startTime = new Date();
+            timer = setInterval(updateLiveStats, 100);
+        }
 
-      document.getElementById('mainTitle').textContent = currentTranslation.mainTitle;
-      document.getElementById('amount').placeholder = currentTranslation.placeholder_amount;
-      document.getElementById('toText').textContent = currentTranslation.to_text;
-      document.getElementById('convertButton').textContent = currentTranslation.button_convert;
-      
-      if (lang === 'ar') {
-          document.body.dir = 'rtl';
-      } else {
-          document.body.dir = 'ltr';
-      }
-      
-      document.getElementById('result').textContent = ''; 
-  }
-  
-  // ***************************************************
-  // 4. دالة تبديل ظهور القائمة المنسدلة
-  // ***************************************************
-  function toggleMenu() {
-      const menu = document.getElementById('languageMenu');
-      menu.classList.toggle('show');
-  }
+        const val = inputField.value;
+        renderText(val);
 
-  // ***************************************************
-  // 5. دالة تبديل العملات (Swap Currencies)
-  // ***************************************************
-  function swapCurrencies() {
-      const fromSelect = document.getElementById('fromCurrency');
-      const toSelect = document.getElementById('toCurrency');
-      const tempValue = fromSelect.value;
-      
-      fromSelect.value = toSelect.value;
-      toSelect.value = tempValue;
-      
-      convertCurrency(); 
-  }
+        // اهتزاز الشاشة عند الخطأ
+        if (val.length > 0 && val[val.length - 1] !== targetSentence[val.length - 1]) {
+            gameBox.classList.add('apply-shake');
+            setTimeout(() => gameBox.classList.remove('apply-shake'), 150);
+        }
 
-  // ***************************************************
-  // 6. دالة جلب الأسعار وتعبئة القوائم (مع التخزين المؤقت)
-  // ***************************************************
-  async function populateCurrencies() {
-      const fromSelect = document.getElementById('fromCurrency');
-      const toSelect = document.getElementById('toCurrency');
-      const resultDiv = document.getElementById('result');
-      const loadingMessage = document.getElementById('loadingMessage');
-      
-      loadingMessage.style.display = 'block';
-      resultDiv.innerText = "";
-      
-      // التحقق من المخزن المؤقت
-      const currentTime = Date.now();
-      const timeSinceLastFetch = currentTime - lastFetchTimestamp;
+        if (val === targetSentence) {
+            finishLevel();
+        }
+    });
 
-      // إذا كانت البيانات موجودة وحديثة (ضمن مدة الكاش)، استخدمها مباشرة
-      if (Object.keys(liveExchangeRates).length > 0 && timeSinceLastFetch < CACHE_DURATION_MS) {
-          console.log("استخدام البيانات المخزنة (CACHE) لتوفير الحصة.");
-          loadingMessage.style.display = 'none';
-          fillCurrencySelectors(fromSelect, toSelect);
-          convertCurrency();
-          return;
-      }
-      
-      // إذا كانت غير موجودة أو قديمة، قم بالجلب من API
-      try {
-          const response = await fetch(BASE_URL);
-          const data = await response.json();
+    function updateLiveStats() {
+        const timeElapsed = (new Date() - startTime) / 60000;
+        const wpm = Math.round((inputField.value.length / 5) / timeElapsed) || 0;
+        document.getElementById('wpm').innerText = wpm;
+        document.getElementById('acc').innerText = (inputField.value === targetSentence.substring(0, inputField.value.length)) ? 100 : 70;
+    }
 
-          if (data.result === 'success') {
-              liveExchangeRates = data.conversion_rates;
-              lastFetchTimestamp = currentTime; // تحديث وقت الجلب
-              console.log("تم جلب وتحديث الأسعار بنجاح من API.");
-              
-              fillCurrencySelectors(fromSelect, toSelect);
-              convertCurrency();
+    function finishLevel() {
+        clearInterval(timer);
+        const finalWpm = parseInt(document.getElementById('wpm').innerText);
+        if (finalWpm > bestRecord) {
+            bestRecord = finalWpm;
+            localStorage.setItem('sultan_pro_best', bestRecord);
+            document.getElementById('best').innerText = bestRecord;
+        }
 
-          } else {
-              console.error("فشل جلب الأسعار من API. يرجى التحقق من المفتاح.");
-              resultDiv.innerText = "عفواً، فشل جلب الأسعار المحدثة. (تحقق من المفتاح أو الحصة).";
-          }
-      } catch (error) {
-          console.error("حدث خطأ في الاتصال بالـ API:", error);
-          resultDiv.innerText = "تعذر الاتصال بخادم الأسعار. تحقق من اتصالك بالإنترنت.";
-      } finally {
-          loadingMessage.style.display = 'none';
-      }
-  }
+        xpPoints += 45;
+        if (xpPoints >= 100) {
+            currentLevel++; xpPoints = 0;
+            document.getElementById('lvl').innerText = currentLevel;
+        }
+        document.getElementById('xp-bar').style.width = xpPoints + "%";
+        document.getElementById('xp-status').innerText = xpPoints + " / 100 XP";
+        
+        updateRankDisplay(finalWpm);
+        setTimeout(startNewLevel, 1200);
+    }
 
-  // دالة مساعدة لملء القوائم المنسدلة
-  function fillCurrencySelectors(fromSelect, toSelect) {
-      fromSelect.innerHTML = '';
-      toSelect.innerHTML = '';
+    function updateRankDisplay(wpm) {
+        let rank = "NOOB 🐢";
+        if (wpm > 30) rank = "FAST BUNNY 🐇";
+        if (wpm > 60) rank = "NEON TIGER 🐅";
+        if (wpm > 90) rank = "SULTAN BOSS 👑";
+        document.getElementById('rank-tag').innerText = "RANK: " + rank;
+    }
 
-      for (const code in supportedCurrencies) {
-          if (liveExchangeRates.hasOwnProperty(code)) {
-              const name = supportedCurrencies[code];
-              
-              const option = document.createElement('option');
-              option.value = code;
-              option.textContent = name;
-              
-              fromSelect.appendChild(option);
-              toSelect.appendChild(option.cloneNode(true));
-          }
-      }
-      fromSelect.value = 'USD'; 
-      toSelect.value = 'SYP';
-  }
+    function switchTheme() {
+        themeIdx = (themeIdx + 1) % themes.length;
+        document.body.className = themes[themeIdx];
+    }
 
-  // ***************************************************
-  // 7. دالة التحويل باستخدام الأسعار الحية
-  // ***************************************************
-  function convertCurrency() {
-      const amountInput = document.getElementById('amount');
-      const from = document.getElementById('fromCurrency').value;
-      const to = document.getElementById('toCurrency').value;
-      const resultDiv = document.getElementById('result');
-      const amount = parseFloat(amountInput.value);
-      
-      const currentLang = document.body.dir === 'rtl' ? 'ar' : 'en';
-      const translation = translations[currentLang];
+    // Particles Background
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let dots = Array.from({length: 70}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, dx: Math.random()-0.5, dy: Math.random()-0.5}));
+    function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+        dots.forEach(d => {
+            d.x += d.dx; d.y += d.dy;
+            if(d.x<0 || d.x>canvas.width) d.dx*=-1;
+            if(d.y<0 || d.y>canvas.height) d.dy*=-1;
+            ctx.beginPath(); ctx.arc(d.x, d.y, 1.5, 0, 7); ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
 
-      if (Object.keys(liveExchangeRates).length === 0) {
-          resultDiv.innerText = "الرجاء انتظار تحميل الأسعار من API.";
-          return;
-      }
-
-      if (isNaN(amount) || amount <= 0) {
-        resultDiv.innerText = translation.error_amount;
-        return;
-      }
-      
-      if (!liveExchangeRates.hasOwnProperty(from) || !liveExchangeRates.hasOwnProperty(to)) {
-        resultDiv.innerText = translation.error_rate;
-        return;
-      }
-
-      // حساب التحويل
-      const fromRate = liveExchangeRates[from];
-      const toRate = liveExchangeRates[to];
-      
-      // المعادلة: تحويل المبلغ أولاً إلى الدولار (العملة الأساسية للـ API
+    animate(); startNewLevel();
+    document.addEventListener('click', () => inputField.focus());
+</script>
+</body>
+</html>
